@@ -1,10 +1,13 @@
+import './globals.css';
+
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, JetBrains_Mono } from 'next/font/google';
-import './globals.css';
-import { cn } from '@/lib/utils';
+
 import { AppSidebar } from '@/components/app-sidebar';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import TaskDetailSidebar from '@/components/task/task-detail-sidebar';
 import { ThemeProvider } from '@/components/theme-provider';
+import { SidebarInset } from '@/components/ui/sidebar';
+import { cn } from '@/lib/utils';
 
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
@@ -44,10 +47,13 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
+          <div className="w-full flex overflow-hidden max-h-dvh">
             <AppSidebar />
-            <main className="flex-1 px-6 pt-10">{children}</main>
-          </SidebarProvider>
+            <SidebarInset>
+              <main className="flex-1 overflow-auto">{children}</main>
+            </SidebarInset>
+            <TaskDetailSidebar />
+          </div>
         </ThemeProvider>
       </body>
     </html>

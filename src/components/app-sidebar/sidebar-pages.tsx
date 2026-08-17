@@ -1,9 +1,7 @@
-'use client';
-
 import { ClipboardListIcon, StarIcon, SunIcon } from 'lucide-react';
 
-import { SidebarGroup, SidebarGroupContent } from '@/components/ui/sidebar';
 import LinkButton from '@/components/link-button';
+import { SidebarGroup, SidebarGroupContent } from '@/components/ui/sidebar';
 
 export function SidebarPages() {
   return (
