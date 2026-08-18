@@ -8,6 +8,7 @@ export default function TaskDetailSidebar() {
     <SidebarProvider
       id="task-detail-sidebar"
       className="w-fit overflow-hidden max-h-dvh"
+      defaultOpen={false}
       style={
         {
           '--sidebar-width': '22.5rem',

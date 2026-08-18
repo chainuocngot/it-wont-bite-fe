@@ -3,10 +3,9 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, JetBrains_Mono } from 'next/font/google';
 
-import { AppSidebar } from '@/components/app-sidebar';
-import TaskDetailSidebar from '@/components/task/task-detail-sidebar';
+import IntervalRefreshToken from '@/components/interval-refresh-token';
 import { ThemeProvider } from '@/components/theme-provider';
-import { SidebarInset } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
 
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
@@ -47,14 +46,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
           enableSystem
           disableTransitionOnChange
         >
-          <div className="w-full flex overflow-hidden max-h-dvh">
-            <AppSidebar />
-            <SidebarInset>
-              <main className="flex-1 overflow-auto">{children}</main>
-            </SidebarInset>
-            <TaskDetailSidebar />
-          </div>
+          {children}
+          <Toaster />
         </ThemeProvider>
+        <IntervalRefreshToken />
       </body>
     </html>
   );
