@@ -2,6 +2,8 @@ import http from '@/lib/http';
 import {
   LoginBodyType,
   LoginResType,
+  LogoutBodyType,
+  LogoutResType,
   RefreshTokenBodyType,
   RefreshTokenResType,
   RegisterBodyType,
@@ -27,6 +29,12 @@ const authApiRequests = {
     }),
   sRefreshToken: (body: RefreshTokenBodyType) =>
     http.post<RefreshTokenResType>('/auth/refresh-token', body),
+
+  cLogout: () =>
+    http.post<LogoutResType>('/api/auth/logout', undefined, {
+      toNextServer: true,
+    }),
+  sLogout: (body: LogoutBodyType) => http.post<LogoutResType>('/auth/logout', body),
 };
 
 export default authApiRequests;
