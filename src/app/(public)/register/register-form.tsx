@@ -16,6 +16,10 @@ import { handleApiError } from '@/lib/utils';
 const registerBodySchema = z
   .object({
     name: z.string().min(5, 'Tên phải có ít nhất 5 ký tự.').max(100, 'Tên tối đa 100 ký tự.'),
+    username: z
+      .string()
+      .min(5, 'Username phải có ít nhất 5 ký tự.')
+      .max(100, 'Tên tối đa 100 ký tự.'),
     email: z.email({
       error: 'Email không hợp lệ.',
     }),
@@ -41,6 +45,7 @@ export default function RegisterForm() {
     resolver: zodResolver(registerBodySchema),
     defaultValues: {
       name: '',
+      username: '',
       email: '',
       pwd: '',
       cf_pwd: '',
@@ -75,6 +80,23 @@ export default function RegisterForm() {
                 id="name"
                 aria-invalid={fieldState.invalid}
                 placeholder="Lung Thị Linh"
+                autoComplete="off"
+                required
+              />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+        <Controller
+          name="username"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid}>
+              <FieldLabel htmlFor="username">Username</FieldLabel>
+              <Input
+                {...field}
+                id="username"
+                aria-invalid={fieldState.invalid}
                 autoComplete="off"
                 required
               />

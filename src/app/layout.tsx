@@ -8,6 +8,7 @@ import IntervalRefreshToken from '@/components/interval-refresh-token';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toast';
 import { cn } from '@/lib/utils';
+import AppProvider from '@/providers/app-provider';
 
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], variable: '--font-mono' });
 
@@ -41,16 +42,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <AppProvider>
           <AppHeader />
           {children}
           <Toaster />
-        </ThemeProvider>
+        </AppProvider>
         <IntervalRefreshToken />
       </body>
     </html>

@@ -1,3 +1,5 @@
+'use client';
+
 import UserLogoutButton from '@/components/app-header/user-logout-button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -8,8 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useGetMeQuery } from '@/queries/user';
 
 export default function UserDropdown() {
+  const { data: user } = useGetMeQuery();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -18,7 +23,7 @@ export default function UserDropdown() {
         render={
           <Avatar>
             <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarFallback>{user?.username}</AvatarFallback>
           </Avatar>
         }
       />
