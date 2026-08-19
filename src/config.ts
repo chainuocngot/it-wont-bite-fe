@@ -1,11 +1,11 @@
 import z from 'zod';
 
 const configSchema = z.object({
-  NEXT_PUBLIC_API_URL: z.url(),
+  API_URL: z.url(),
 });
 
 const parsedEnv = configSchema.safeParse({
-  NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+  API_URL: process.env.API_URL,
 });
 
 if (!parsedEnv.success) {

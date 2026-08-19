@@ -12,11 +12,15 @@ const REFRESH_TOKEN_CHECK_INTERVAL = 10_000;
 const NO_NEED_CHECK_PATHS = [...PUBLIC_PATHS];
 
 export default function IntervalRefreshToken() {
+  const hasInitializedRef = React.useRef(false);
   const pathname = usePathname();
 
   React.useEffect(() => {
     // Khi ở trang public thì không cần refresh token
     if (isPathMatched(NO_NEED_CHECK_PATHS, pathname) || pathname === '/') return;
+
+    if (hasInitializedRef.current) return;
+    hasInitializedRef.current = true;
 
     const handleRefreshToken = async () => {
       const accessTokenInfoFromCookie = Cookies.get(COOKIES_AT_INFO_KEY);

@@ -1,5 +1,5 @@
-import envConfig from '@/config';
 import { COOKIES_AT_KEY, isClient } from '@/constants/app';
+import { HttpMethod, TypeOfHttpMethod } from '@/constants/enum';
 import { HttpCode } from '@/constants/http';
 import {
   ApiErrorResponse,
@@ -8,21 +8,12 @@ import {
   ValidationHttpError,
 } from '@/lib/http-error';
 
-const HttpMethod = {
-  Get: 'GET',
-  Post: 'POST',
-  Put: 'PUT',
-  Patch: 'PATCH',
-  Delete: 'DELETE',
-} as const;
-
-type TypeOfHttpMethod = (typeof HttpMethod)[keyof typeof HttpMethod];
 type ApiEndpoint = `/${string}`;
 type HttpRequestOptions = Omit<RequestInit, 'body'> & {
   toNextServer?: boolean;
 };
 
-async function request<Response>(
+export async function request<Response>(
   method: TypeOfHttpMethod,
   endpoint: ApiEndpoint,
   options?: HttpRequestOptions & { body?: object },
@@ -31,7 +22,11 @@ async function request<Response>(
     'Content-Type': 'application/json',
   };
 
-  const baseUrl = options?.toNextServer ? '' : envConfig.NEXT_PUBLIC_API_URL;
+  let baseUrl = '';
+  if (!options?.toNextServer) {
+    const { default: envConfig } = await import('@/config');
+    baseUrl = envConfig.API_URL;
+  }
   const fullUrl = `${baseUrl}${endpoint}`;
   const body = options?.body ? JSON.stringify(options.body) : undefined;
 
