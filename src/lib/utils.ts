@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from 'clsx';
+import { format } from 'date-fns';
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
@@ -32,4 +33,8 @@ export function handleApiError<T extends FieldValues>(
       });
     }
   }
+}
+
+export function formatDate(iso: string) {
+  return format(new Date(iso), 'dd/MM/yyyy');
 }

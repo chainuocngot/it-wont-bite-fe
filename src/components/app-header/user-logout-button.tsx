@@ -19,5 +19,9 @@ export default function UserLogoutButton() {
     router.push('/');
   };
 
-  return <DropdownMenuItem onClick={logout}>Đăng xuất</DropdownMenuItem>;
+  return (
+    <DropdownMenuItem className="justify-center" onClick={logout}>
+      Đăng xuất
+    </DropdownMenuItem>
+  );
 }

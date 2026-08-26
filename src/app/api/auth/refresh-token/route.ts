@@ -1,13 +1,14 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { redirect } from 'next/navigation';
+import { NextRequest, NextResponse } from 'next/server';
 
 import authApiRequests from '@/api-requests/auth';
 import { COOKIES_AT_INFO_KEY, COOKIES_AT_KEY, COOKIES_RT_KEY } from '@/constants/app';
 import { HttpCode } from '@/constants/http';
 import { HttpError } from '@/lib/http-error';
 
-export async function POST(): Promise<Response> {
+export async function POST(request: NextRequest): Promise<Response> {
   const cookieStore = await cookies();
   const refreshTokenInCookie = cookieStore.get(COOKIES_RT_KEY)?.value;
 
@@ -65,6 +66,12 @@ export async function POST(): Promise<Response> {
     });
   } catch (error) {
     if (error instanceof HttpError) {
+      if (error.statusCode === HttpCode.Unauthorized) {
+        cookieStore.delete(COOKIES_RT_KEY);
+        cookieStore.delete(COOKIES_AT_KEY);
+        cookieStore.delete(COOKIES_AT_INFO_KEY);
+      }
+
       return NextResponse.json(error, {
         status: error.statusCode,
       });

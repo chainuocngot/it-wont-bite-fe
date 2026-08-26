@@ -13,7 +13,7 @@ export async function POST(): Promise<NextResponse<LogoutResType>> {
 
   try {
     if (!refreshTokenInCookie) {
-      throw new Error('Error.RefreshTokenNotFound');
+      throw new Error('ErrorNext.RefreshTokenNotFound');
     }
 
     logoutRes = await authApiRequests.sLogout({

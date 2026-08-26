@@ -7,7 +7,17 @@ import React, { useState } from 'react';
 import { ThemeProvider } from '@/components/theme-provider';
 
 export default function AppProvider({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 1,
+            retryDelay: 5_000,
+          },
+        },
+      }),
+  );
 
   return (
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>

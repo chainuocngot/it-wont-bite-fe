@@ -11,8 +11,8 @@ export const TodoSchema = z.object({
   description: z.string().nullish(),
   dueAt: z.date().nullish(),
   remindAt: z.date().nullish(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 export type TodoType = z.infer<typeof TodoSchema>;

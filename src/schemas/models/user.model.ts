@@ -8,8 +8,9 @@ export const UserSchema = z.object({
   pwd: z.string(),
   name: z.string(),
   username: z.string(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+  bio: z.string().nullable(),
+  createdAt: z.iso.datetime(),
+  updatedAt: z.iso.datetime(),
 });
 
 export const ProjectedUserSchema = UserSchema.pick({
@@ -17,6 +18,7 @@ export const ProjectedUserSchema = UserSchema.pick({
   email: true,
   name: true,
   username: true,
+  bio: true,
   createdAt: true,
 });
 
