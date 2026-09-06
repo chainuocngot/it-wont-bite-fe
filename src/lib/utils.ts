@@ -1,9 +1,11 @@
 import { type ClassValue, clsx } from 'clsx';
-import { format } from 'date-fns';
+import debounce from 'lodash/debounce';
+import { ChangeEvent, MouseEvent } from 'react';
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form';
 import { twMerge } from 'tailwind-merge';
 
 import { toast } from '@/components/ui/toast';
+import { TodoStatus, TypeOfTodoStatus } from '@/constants/enum';
 import { HttpCode } from '@/constants/http';
 import { HttpError, ValidationHttpError } from '@/lib/http-error';
 
@@ -35,6 +37,22 @@ export function handleApiError<T extends FieldValues>(
   }
 }
 
-export function formatDate(iso: string) {
-  return format(new Date(iso), 'dd/MM/yyyy');
+export function debounceInput(setValueFn: (value: string) => void) {
+  return debounce((e: ChangeEvent<HTMLInputElement, HTMLInputElement>) => {
+    setValueFn(e.target.value);
+  }, 300);
+}
+
+export function getNextTodoStatus(currentStatus: TypeOfTodoStatus) {
+  const nextStatus =
+    currentStatus === TodoStatus.Completed ? TodoStatus.Todo : TodoStatus.Completed;
+
+  return nextStatus;
+}
+
+export function stopPropagation<T extends HTMLElement>(fn?: (...args: unknown[]) => void) {
+  return function (e: MouseEvent<T>) {
+    e.stopPropagation();
+    fn?.();
+  };
 }

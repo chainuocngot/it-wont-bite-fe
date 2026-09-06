@@ -2,7 +2,7 @@
 
 import Cookies from 'js-cookie';
 import { usePathname, useRouter } from 'next/navigation';
-import React from 'react';
+import { useEffect, useRef } from 'react';
 
 import authApiRequests from '@/api-requests/auth';
 import { COOKIES_AT_INFO_KEY, COOKIES_AT_KEY, PUBLIC_PATHS } from '@/constants/app';
@@ -15,10 +15,10 @@ const NO_NEED_CHECK_PATHS = [...PUBLIC_PATHS];
 
 export default function IntervalRefreshToken() {
   const router = useRouter();
-  const hasInitializedRef = React.useRef(false);
+  const hasInitializedRef = useRef(false);
   const pathname = usePathname();
 
-  React.useEffect(() => {
+  useEffect(() => {
     // Khi ở trang public thì không cần refresh token
     if (isPathMatched(NO_NEED_CHECK_PATHS, pathname) || pathname === '/') return;
 
@@ -51,6 +51,7 @@ export default function IntervalRefreshToken() {
         } else {
           // Trường hợp 2: Khi user mở app sau 1 khoảng thời gian và AT đã hết hạn (biến mất khỏi cookie)
           await authApiRequests.cRefreshToken();
+          router.refresh();
         }
       } catch (error) {
         if (error instanceof HttpError && error.statusCode === HttpCode.Unauthorized) {
@@ -65,7 +66,7 @@ export default function IntervalRefreshToken() {
     return () => {
       clearInterval(timer);
     };
-  }, [pathname]);
+  }, [pathname, router]);
 
   return null;
 }

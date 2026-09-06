@@ -1,7 +1,7 @@
-import { QueryClient, useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import userApiRequests from '@/api-requests/user';
-import { UserType } from '@/schemas/models/user.model';
+import { UserType } from '@/schemas/models/user';
 import { UpdateMeBodyType } from '@/schemas/user';
 
 export const useGetMeQuery = () => {
@@ -12,7 +12,7 @@ export const useGetMeQuery = () => {
 };
 
 export const useUpdateMeMutation = () => {
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: ({ userId, body }: { userId: UserType['id']; body: UpdateMeBodyType }) =>

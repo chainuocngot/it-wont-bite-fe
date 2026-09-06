@@ -5,7 +5,7 @@ import UserDropdown from '@/components/app-header/user-dropdown';
 
 export default function AppHeader() {
   return (
-    <header className="border-b px-6">
+    <header className="border-b px-6 sticky top-0 z-100 bg-background">
       <div className="w-full flex h-16 items-center justify-between">
         <Link href="/" className="font-semibold">
           <Image

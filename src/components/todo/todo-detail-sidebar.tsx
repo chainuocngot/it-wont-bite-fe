@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { TaskDetailSidebarContent } from '@/components/task/task-detail-sidebar-content';
+import { TodoDetailSidebarContent } from '@/components/todo/todo-detail-sidebar-content';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
-export default function TaskDetailSidebar() {
+export default function TodoDetailSidebar() {
   return (
     <SidebarProvider
-      id="task-detail-sidebar"
+      id="todo-detail-sidebar"
       className="w-fit overflow-hidden max-h-dvh"
       defaultOpen={false}
       style={
@@ -16,7 +16,7 @@ export default function TaskDetailSidebar() {
         } as React.CSSProperties
       }
     >
-      <TaskDetailSidebarContent />
+      <TodoDetailSidebarContent />
     </SidebarProvider>
   );
 }

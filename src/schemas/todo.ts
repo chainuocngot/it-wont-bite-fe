@@ -1,7 +1,8 @@
 import z from 'zod';
 
 import { TodoStatus } from '@/constants/enum';
-import { TodoSchema } from '@/schemas/models/todo.model';
+import { idZod } from '@/constants/zod';
+import { TodoIncludeLabelsSchema, TodoSchema } from '@/schemas/models/todo';
 import { MessageResSchema } from '@/schemas/response';
 
 // Create Todo
@@ -11,19 +12,21 @@ export const CreateTodoBodySchema = TodoSchema.pick({
   description: true,
   dueAt: true,
   remindAt: true,
+  isFav: true,
 })
   .extend({
     status: TodoSchema.shape.status.default(TodoStatus.Todo),
     description: TodoSchema.shape.description.optional(),
     dueAt: TodoSchema.shape.dueAt.optional(),
     remindAt: TodoSchema.shape.remindAt.optional(),
+    isFav: TodoSchema.shape.isFav.default(false).optional(),
   })
   .strict();
 
 export const CreateTodoResSchema = TodoSchema;
 
 // List Todo
-export const ListTodoResSchema = z.array(TodoSchema);
+export const ListTodoResSchema = z.array(TodoIncludeLabelsSchema);
 
 // Update Todo
 export const UpdateTodoBodySchema = TodoSchema.pick({
@@ -32,7 +35,13 @@ export const UpdateTodoBodySchema = TodoSchema.pick({
   description: true,
   dueAt: true,
   remindAt: true,
-}).strict();
+  isFav: true,
+})
+  .extend({
+    labels: z.array(idZod),
+  })
+  .partial()
+  .strict();
 
 export const UpdateTodoResSchema = TodoSchema;
 

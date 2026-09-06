@@ -21,7 +21,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from '@/components/ui/toast';
 import { handleApiError } from '@/lib/utils';
 import { useUpdateMeMutation } from '@/queries/user';
-import { ProjectedUserType } from '@/schemas/models/user.model';
+import { ProjectedUserType } from '@/schemas/models/user';
 
 const updateMeBodySchema = z.object({
   name: z
@@ -120,7 +120,7 @@ export default function EditProfileDialog({ user }: { user: ProjectedUserType })
                       id="name"
                       aria-invalid={fieldState.invalid}
                       autoComplete="off"
-                      className="focus-visible:ring-0 pl-3 border-none focus:outline-none bg-transparent!"
+                      className="ghost-input pl-3"
                     />
                     {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                   </Field>
@@ -155,7 +155,7 @@ export default function EditProfileDialog({ user }: { user: ProjectedUserType })
                     id="username"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
-                    className="focus-visible:ring-0 pl-3 border-none focus:outline-none bg-transparent!"
+                    className="ghost-input pl-3"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
@@ -186,7 +186,7 @@ export default function EditProfileDialog({ user }: { user: ProjectedUserType })
                     placeholder="Thêm tiểu sử"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
-                    className="focus-visible:ring-0 pl-3 border-none focus:outline-none bg-transparent!"
+                    className="ghost-input pl-3"
                   />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>

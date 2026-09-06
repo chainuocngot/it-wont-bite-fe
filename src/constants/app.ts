@@ -6,3 +6,8 @@ export const COOKIES_RT_KEY = 'refresh_token';
 
 export const PRIVATE_PATHS = ['/tasks'];
 export const PUBLIC_PATHS = ['/login', '/register'];
+
+export const DAY_NAMES = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+export const START_OF_THE_DAY_HOUR = 9; //9 AM
+export const END_OF_THE_DAY_HOUR = 17; //5 PM
+export const HOURS_A_DAY = 24;

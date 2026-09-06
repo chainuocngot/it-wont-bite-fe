@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeftIcon } from 'lucide-react';
-import React from 'react';
+import React, { useRef } from 'react';
 import { FieldValues, UseFormReturn } from 'react-hook-form';
 
 import { Button } from '@/components/ui/button';
@@ -30,7 +30,7 @@ export default function EditSingleFieldDialog({
   form,
 }: Props) {
   const { getValues, setValue } = form;
-  const initialValue = React.useRef('');
+  const initialValue = useRef('');
 
   const handleOpen = () => {
     initialValue.current = getValues(fieldName);

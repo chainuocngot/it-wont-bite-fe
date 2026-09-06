@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { ProjectedUserSchema, UserSchema } from '@/schemas/models/user.model';
+import { ProjectedUserSchema, UserSchema } from '@/schemas/models/user';
 
 // Get Me
 export const GetMeResSchema = ProjectedUserSchema;

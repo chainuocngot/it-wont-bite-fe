@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 
 interface UiState {
-  taskDetailSidebarOpen?: boolean;
+  todoDetailSidebarOpen?: boolean;
 
-  toggleTaskDetailSidebar: (open?: boolean) => void;
+  toggleTodoDetailSidebar: (open?: boolean) => void;
 }
 
 export const useUiStore = create<UiState>()((set) => ({
-  taskDetailSidebarOpen: false,
+  todoDetailSidebarOpen: false,
 
-  toggleTaskDetailSidebar: (open?: boolean) =>
-    set((state) => ({ taskDetailSidebarOpen: open ?? !state.taskDetailSidebarOpen })),
+  toggleTodoDetailSidebar: (open?: boolean) =>
+    set((state) => ({ todoDetailSidebarOpen: open ?? !state.todoDetailSidebarOpen })),
 }));

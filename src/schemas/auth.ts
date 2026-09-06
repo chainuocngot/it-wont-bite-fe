@@ -1,6 +1,6 @@
 import z from 'zod';
 
-import { UserSchema } from '@/schemas/models/user.model';
+import { UserSchema } from '@/schemas/models/user';
 import { MessageResSchema } from '@/schemas/response';
 
 // Register

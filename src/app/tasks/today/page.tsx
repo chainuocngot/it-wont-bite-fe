@@ -1,10 +1,20 @@
 import { SunIcon } from 'lucide-react';
 
+import todoApiRequests from '@/api-requests/todo';
+import TodoList from '@/app/tasks/today/todo-list';
 import PageContainer from '@/components/page-container';
-import QuickTaskForm from '@/components/task/quick-task-form';
-import TaskItem from '@/components/task/task-item';
+import QuickTodoForm from '@/components/todo/quick-todo-form';
+import { TodoIncludeLabelsType } from '@/schemas/models/todo';
 
-export default function Today() {
+export default async function Today() {
+  let todos: TodoIncludeLabelsType[] = [];
+
+  try {
+    todos = await todoApiRequests.sListTodo();
+  } catch (error) {
+    console.log('>> Check | error:', error);
+  }
+
   return (
     <PageContainer
       titleNode={
@@ -14,12 +24,8 @@ export default function Today() {
         </div>
       }
     >
-      <QuickTaskForm />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
-      <TaskItem />
+      <QuickTodoForm />
+      <TodoList items={todos} />
     </PageContainer>
   );
 }

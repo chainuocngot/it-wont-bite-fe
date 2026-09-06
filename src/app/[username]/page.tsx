@@ -3,7 +3,7 @@ import EditProfileDialog from '@/app/[username]/edit-profile-dialog';
 import PageContainer from '@/components/page-container';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card } from '@/components/ui/card';
-import { formatDate } from '@/lib/utils';
+import { formatFullDate } from '@/lib/date';
 
 type ParamsType = Promise<{ username: `@${string}` }>;
 
@@ -64,7 +64,7 @@ export default async function ProfilePage({ params }: { params: ParamsType }) {
               <span className="text-muted-foreground">|</span>
               <div className="flex items-center gap-4">
                 <span className="text-base text-muted-foreground">
-                  Tham gia từ {formatDate(user.createdAt)}
+                  Tham gia từ {formatFullDate(user.createdAt)}
                 </span>
               </div>
             </div>

@@ -1,5 +1,5 @@
 import http from '@/lib/http';
-import { UserType } from '@/schemas/models/user.model';
+import { UserType } from '@/schemas/models/user';
 import {
   GetMeResType,
   GetUserByUsernameResType,
