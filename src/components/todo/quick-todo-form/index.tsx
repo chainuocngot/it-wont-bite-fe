@@ -16,15 +16,25 @@ import { cn, handleApiError } from '@/lib/utils';
 import { useCreateTodoMutation } from '@/queries/todo';
 import { CreateTodoBodyType } from '@/schemas/todo';
 
+interface Props {
+  favMode?: boolean;
+}
+
 const CREATE_TODO_BODY_DEFAULT_VALUES: CreateTodoBodyType = {
   title: '',
   status: TodoStatus.Todo,
 };
 
-export default function QuickTodoForm() {
+function getCreateTodoBodyDefaultValues(additionValues: Partial<CreateTodoBodyType>) {
+  return { ...CREATE_TODO_BODY_DEFAULT_VALUES, ...additionValues };
+}
+
+export default function QuickTodoForm({ favMode }: Props) {
   const router = useRouter();
   const [createTodoBody, setCreateTodoBody] = useState<CreateTodoBodyType>(
-    CREATE_TODO_BODY_DEFAULT_VALUES,
+    getCreateTodoBodyDefaultValues({
+      isFav: favMode ?? undefined,
+    }),
   );
   const { mutateAsync } = useCreateTodoMutation();
 
@@ -39,7 +49,11 @@ export default function QuickTodoForm() {
   }, []);
 
   const clearCreateTodoBody = () => {
-    setCreateTodoBody(CREATE_TODO_BODY_DEFAULT_VALUES);
+    setCreateTodoBody(
+      getCreateTodoBodyDefaultValues({
+        isFav: favMode ?? undefined,
+      }),
+    );
   };
 
   async function onCreate(e: SubmitEvent<HTMLFormElement>) {

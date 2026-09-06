@@ -11,6 +11,7 @@ import {
 type ApiEndpoint = `/${string}`;
 type HttpRequestOptions = Omit<RequestInit, 'body'> & {
   toNextServer?: boolean;
+  query?: object;
 };
 
 export async function request<Response>(
@@ -27,7 +28,13 @@ export async function request<Response>(
     const { default: envConfig } = await import('@/config');
     baseUrl = envConfig.API_URL;
   }
-  const fullUrl = `${baseUrl}${endpoint}`;
+
+  let fullUrl = `${baseUrl}${endpoint}`;
+  if (options?.query) {
+    const queryString = new URLSearchParams(options.query as URLSearchParams).toString();
+    fullUrl = `${fullUrl}?${queryString}`;
+  }
+
   const body = options?.body ? JSON.stringify(options.body) : undefined;
 
   let accessToken: string | null = null;
@@ -40,7 +47,7 @@ export async function request<Response>(
     baseHeaders['Authorization'] = `Bearer ${accessToken}`;
   }
 
-  const res = await fetch(fullUrl, {
+  const res = await fetch(fullUrl.toString(), {
     method,
     body,
     headers: {

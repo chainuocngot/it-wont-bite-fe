@@ -2,10 +2,10 @@
 
 import Cookies from 'js-cookie';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import authApiRequests from '@/api-requests/auth';
-import { COOKIES_AT_INFO_KEY, COOKIES_AT_KEY, PUBLIC_PATHS } from '@/constants/app';
+import { COOKIES_AT_INFO_KEY, PUBLIC_PATHS } from '@/constants/app';
 import { HttpCode } from '@/constants/http';
 import { HttpError } from '@/lib/http-error';
 import { isPathMatched } from '@/lib/utils';
@@ -15,24 +15,19 @@ const NO_NEED_CHECK_PATHS = [...PUBLIC_PATHS];
 
 export default function IntervalRefreshToken() {
   const router = useRouter();
-  const hasInitializedRef = useRef(false);
   const pathname = usePathname();
 
   useEffect(() => {
     // Khi ở trang public thì không cần refresh token
     if (isPathMatched(NO_NEED_CHECK_PATHS, pathname) || pathname === '/') return;
 
-    if (hasInitializedRef.current) return;
-    hasInitializedRef.current = true;
-
     const handleRefreshToken = async () => {
       try {
-        const accessTokenFromCookie = Cookies.get(COOKIES_AT_KEY);
         const accessTokenInfoFromCookie = Cookies.get(COOKIES_AT_INFO_KEY);
 
         // Trường hợp 1: Khi AT vẫn còn trong cookie
         // Cần có access token để biết thời gian sống để set interval
-        if (accessTokenInfoFromCookie && accessTokenFromCookie) {
+        if (accessTokenInfoFromCookie) {
           const accessTokenInfo = accessTokenInfoFromCookie
             ? (JSON.parse(accessTokenInfoFromCookie) as {
                 exp: number;
@@ -51,7 +46,7 @@ export default function IntervalRefreshToken() {
         } else {
           // Trường hợp 2: Khi user mở app sau 1 khoảng thời gian và AT đã hết hạn (biến mất khỏi cookie)
           await authApiRequests.cRefreshToken();
-          router.refresh();
+          window.location.reload();
         }
       } catch (error) {
         if (error instanceof HttpError && error.statusCode === HttpCode.Unauthorized) {

@@ -4,6 +4,7 @@ import {
   CreateTodoBodyType,
   CreateTodoResType,
   DeleteTodoResType,
+  ListTodoFilterQueryType,
   ListTodoResType,
   UpdateTodoBodyType,
   UpdateTodoResType,
@@ -11,11 +12,7 @@ import {
 
 const todoApiRequests = {
   // List todo
-  cListTodo: () =>
-    http.get<ListTodoResType>('/api/proxy/todos', {
-      toNextServer: true,
-    }),
-  sListTodo: () => http.get<ListTodoResType>('/todos'),
+  sListTodo: (query?: ListTodoFilterQueryType) => http.get<ListTodoResType>('/todos', { query }),
 
   // Create todo
   cCreateTodo: (body: CreateTodoBodyType) =>

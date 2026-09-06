@@ -14,6 +14,7 @@ import {
   DropdownMenuGroup,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { COLOR_BY_LABEL_COLOR, OUTLINED_COLOR_BY_LABEL_COLOR } from '@/constants/todo';
 import { useDebounce } from '@/hooks/use-debounce';
 import { useDebounceEffect } from '@/hooks/use-debounce-effect';
 import { cn } from '@/lib/utils';
@@ -25,26 +26,6 @@ interface Props {
   todo: TodoIncludeLabelsType;
   onChange: (selectedTodoLabels: BadgeInputValue[]) => void;
 }
-
-const COLOR_BY_LABEL_COLOR: Record<string, string> = {
-  Blue: 'bg-blue-500',
-  Red: 'bg-red-500',
-  Yellow: 'bg-yellow-500',
-  Green: 'bg-green-500',
-  Purple: 'bg-purple-500',
-  Pink: 'bg-pink-500',
-  Orange: 'bg-orange-500',
-};
-
-const OUTLINED_COLOR_BY_LABEL_COLOR: Record<string, string> = {
-  Blue: 'bg-blue-400/40',
-  Red: 'bg-red-400/40',
-  Yellow: 'bg-yellow-400/40',
-  Green: 'bg-green-400/40',
-  Purple: 'bg-purple-400/40',
-  Pink: 'bg-pink-400/40',
-  Orange: 'bg-orange-400/40',
-};
 
 function transformLabelsToLabelsValues(todoLabels: TodoIncludeLabelsType['labels']) {
   return todoLabels.map<BadgeInputValue>((label) => ({

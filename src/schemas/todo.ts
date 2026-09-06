@@ -26,6 +26,15 @@ export const CreateTodoBodySchema = TodoSchema.pick({
 export const CreateTodoResSchema = TodoSchema;
 
 // List Todo
+export const ListTodoFilterQuerySchema = TodoSchema.pick({
+  isFav: true,
+})
+  .extend({
+    status: z.array(z.enum(TodoStatus)),
+  })
+  .partial()
+  .strict();
+
 export const ListTodoResSchema = z.array(TodoIncludeLabelsSchema);
 
 // Update Todo
@@ -57,6 +66,7 @@ export const DeleteTodoResSchema = MessageResSchema;
 
 export type CreateTodoBodyType = z.infer<typeof CreateTodoBodySchema>;
 export type CreateTodoResType = z.infer<typeof CreateTodoResSchema>;
+export type ListTodoFilterQueryType = z.infer<typeof ListTodoFilterQuerySchema>;
 export type ListTodoResType = z.infer<typeof ListTodoResSchema>;
 export type UpdateTodoBodyType = z.infer<typeof UpdateTodoBodySchema>;
 export type UpdateTodoResType = z.infer<typeof UpdateTodoResSchema>;
