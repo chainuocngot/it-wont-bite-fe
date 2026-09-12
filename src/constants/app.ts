@@ -1,4 +1,4 @@
-import { ClipboardListIcon, StarIcon, SunIcon } from 'lucide-react';
+import { CalendarIcon, ClipboardListIcon, StarIcon, SunIcon } from 'lucide-react';
 
 export const isClient = typeof window !== 'undefined';
 
@@ -29,5 +29,10 @@ export const PAGE_ROUTES = [
     href: '/tasks/inbox',
     Icon: ClipboardListIcon,
     title: 'Tác vụ',
+  },
+  {
+    href: '/tasks/calendar',
+    Icon: CalendarIcon,
+    title: 'Lịch',
   },
 ];

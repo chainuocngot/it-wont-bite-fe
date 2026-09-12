@@ -1,13 +1,19 @@
 import {
   addDays,
   addHours,
+  eachDayOfInterval,
   eachMinuteOfInterval,
+  endOfMonth,
+  endOfWeek,
   format,
   getDay,
+  isSameMonth,
   isToday,
   isTomorrow,
   set,
   startOfDay,
+  startOfMonth,
+  startOfWeek,
 } from 'date-fns';
 
 import { DAY_NAMES, HOURS_A_DAY } from '@/constants/app';
@@ -95,4 +101,23 @@ export function getTimeOptions() {
 export function getStartOfTomorrow() {
   const now = new Date();
   return startOfDay(addDays(now, 1));
+}
+
+export function getCalendarDays() {
+  const now = new Date();
+  const monthStart = startOfMonth(now);
+  const monthEnd = endOfMonth(now);
+
+  const gridStart = startOfWeek(monthStart, { weekStartsOn: 1 });
+  const gridEnd = endOfWeek(monthEnd, { weekStartsOn: 1 });
+
+  const allDays = eachDayOfInterval({
+    start: gridStart,
+    end: gridEnd,
+  });
+
+  return allDays.map((date) => ({
+    date,
+    isCurrentMonth: isSameMonth(date, now),
+  }));
 }

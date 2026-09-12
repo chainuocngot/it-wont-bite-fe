@@ -7,6 +7,7 @@ import AppHeader from '@/components/app-header';
 import IntervalRefreshToken from '@/components/interval-refresh-token';
 import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toast';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import AppProvider from '@/providers/app-provider';
 
@@ -43,9 +44,11 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
     >
       <body className="min-h-full flex flex-col">
         <AppProvider>
-          <AppHeader />
-          {children}
-          <Toaster />
+          <TooltipProvider>
+            <AppHeader />
+            {children}
+            <Toaster />
+          </TooltipProvider>
         </AppProvider>
         <IntervalRefreshToken />
       </body>

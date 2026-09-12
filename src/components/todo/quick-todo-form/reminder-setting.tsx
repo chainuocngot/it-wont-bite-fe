@@ -1,5 +1,5 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { addDays, addWeeks, format, isBefore, set, startOfWeek } from 'date-fns';
+import { addDays, addWeeks, format, isBefore, isSunday, set, startOfWeek } from 'date-fns';
 import { CalendarClockIcon, TrashIcon } from 'lucide-react';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -35,16 +35,16 @@ interface Props {
   onChangeSuccess?: (value: Date | null | undefined) => void;
 }
 
-const now = new Date();
+const today = new Date();
 const dates = {
-  endOfTheDay: set(now, {
+  endOfTheDay: set(today, {
     hours: END_OF_THE_DAY_HOUR,
     minutes: 0,
     seconds: 0,
     milliseconds: 0,
   }),
 
-  tomorrow: set(addDays(now, 1), {
+  tomorrow: set(addDays(today, 1), {
     hours: START_OF_THE_DAY_HOUR,
     minutes: 0,
     seconds: 0,
@@ -52,7 +52,7 @@ const dates = {
   }),
 
   nextWeek: set(
-    startOfWeek(addWeeks(now, 1), {
+    startOfWeek(addWeeks(today, 1), {
       weekStartsOn: 1,
     }),
     {
@@ -94,7 +94,7 @@ export default function ReminderSetting({
     onChangeSuccess?.(undefined);
   };
 
-  const isShowEndOfTheDay = isBefore(now, dates.endOfTheDay);
+  const isShowEndOfTheDay = isBefore(today, dates.endOfTheDay);
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -124,12 +124,14 @@ export default function ReminderSetting({
                 {`${formatViDay(dates.tomorrow)}, ${format(dates.tomorrow, 'H:mm')}`}
               </span>
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value={dates.nextWeek}>
-              Tuần tới
-              <span className="text-muted-foreground ml-auto">
-                {`${formatViDay(dates.nextWeek)}, ${format(dates.nextWeek, 'H:mm')}`}
-              </span>
-            </DropdownMenuRadioItem>
+            {!isSunday(today) && (
+              <DropdownMenuRadioItem value={dates.nextWeek}>
+                Tuần tới
+                <span className="text-muted-foreground ml-auto">
+                  {`${formatViDay(dates.nextWeek)}, ${format(dates.nextWeek, 'H:mm')}`}
+                </span>
+              </DropdownMenuRadioItem>
+            )}
           </DropdownMenuRadioGroup>
           <DropdownMenuSeparator />
           <DropdownMenuSub>

@@ -1,5 +1,5 @@
 import { Menu as MenuPrimitive } from '@base-ui/react/menu';
-import { addDays, addWeeks, startOfWeek } from 'date-fns';
+import { addDays, addWeeks, isSunday, startOfWeek } from 'date-fns';
 import { CalendarClockIcon, TrashIcon } from 'lucide-react';
 import { ReactElement, useEffect, useMemo, useState } from 'react';
 
@@ -95,10 +95,12 @@ export default function DueSetting({
               Ngày mai
               <span className="text-muted-foreground ml-auto">{formatViDay(dates.tomorrow)}</span>
             </DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value={dates.nextWeek}>
-              Tuần tới
-              <span className="text-muted-foreground ml-auto">{formatViDay(dates.nextWeek)}</span>
-            </DropdownMenuRadioItem>
+            {!isSunday(today) && (
+              <DropdownMenuRadioItem value={dates.nextWeek}>
+                Tuần tới
+                <span className="text-muted-foreground ml-auto">{formatViDay(dates.nextWeek)}</span>
+              </DropdownMenuRadioItem>
+            )}
           </DropdownMenuRadioGroup>
           <DropdownMenuSeparator />
           <DropdownMenuSub>
