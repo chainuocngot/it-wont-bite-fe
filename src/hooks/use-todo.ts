@@ -1,8 +1,8 @@
 import { UseMutateAsyncFunction } from '@tanstack/react-query';
-import { addDays, startOfDay } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { useTransition } from 'react';
 
+import { getStartOfTomorrow } from '@/lib/date';
 import { getNextTodoStatus, handleApiError } from '@/lib/utils';
 import { TodoType } from '@/schemas/models/todo';
 import { UpdateTodoBodyType, UpdateTodoResType } from '@/schemas/todo';
@@ -121,8 +121,7 @@ export function useToggleAddTodayTodo({
   const toggleAddTodayTodo = () => {
     if (!todoInView) return;
 
-    const now = new Date();
-    const tomorrowStart = startOfDay(addDays(now, 1));
+    const tomorrowStart = getStartOfTomorrow();
 
     const prevRemoveFromTodayValue = todoInView.removeFromTodayAt;
     const nextRemoveFromTodayValue = prevRemoveFromTodayValue ? null : tomorrowStart;

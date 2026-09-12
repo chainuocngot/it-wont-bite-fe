@@ -53,7 +53,6 @@ const updateOptimisticFn = (
     };
   }
 
-  // Khi status thay đổi, lấy todo từ `all`
   const todo = state.all.find((item) => item.id === todoId);
 
   if (!todo) {
@@ -85,6 +84,7 @@ export default function TodoList({ groupedItem, showCompleteItem }: Props) {
   const [isPendingToggleFav, startTransitionToggleFav] = useTransition();
   const [optimisticTodos, setOptimisticTodo] = useOptimistic(groupedItem, updateOptimisticFn);
 
+  const todoDetailSidebarOpen = useUiStore((store) => store.todoDetailSidebarOpen);
   const toggleTodoDetailSidebar = useUiStore((store) => store.toggleTodoDetailSidebar);
   const todoInView = useTodoStore((store) => store.todoInView);
   const setTodoInView = useTodoStore((store) => store.setTodoInView);
@@ -157,7 +157,7 @@ export default function TodoList({ groupedItem, showCompleteItem }: Props) {
         <TodoItem
           key={item.id}
           data={item}
-          isInView={todoInView?.id === item.id}
+          isInView={!!todoDetailSidebarOpen && todoInView?.id === item.id}
           isPendingToggleStatus={isPendingToggleStatus}
           isPendingToggleFav={isPendingToggleFav}
           onToggleStatus={toggleStatusTodo}

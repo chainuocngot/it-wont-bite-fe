@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/toast';
+import { useGetGoogleAuthorizeUrlQuery } from '@/queries/oauth';
 
 const loginBodySchema = z.object({
   email: z.email({
@@ -23,6 +24,7 @@ const loginBodySchema = z.object({
 
 export default function LoginForm() {
   const router = useRouter();
+  const { refetch } = useGetGoogleAuthorizeUrlQuery();
   const form = useForm<z.infer<typeof loginBodySchema>>({
     resolver: zodResolver(loginBodySchema),
     defaultValues: {
@@ -40,6 +42,19 @@ export default function LoginForm() {
 
     router.push('/');
   }
+
+  const handleLoginViaGoogle = async () => {
+    const { data } = await refetch();
+
+    if (!data || !data.url) {
+      toast.add({
+        type: 'warning',
+        description: 'Hiện tính năng này đã không thể sử dụng.',
+      });
+    }
+
+    router.replace(data!.url);
+  };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -84,7 +99,7 @@ export default function LoginForm() {
         <FieldGroup>
           <Field>
             <Button type="submit">Đăng nhập</Button>
-            <Button variant="outline" type="button">
+            <Button variant="outline" type="button" onClick={handleLoginViaGoogle}>
               Tiếp tục với Google
             </Button>
             <FieldDescription className="px-6 text-center">

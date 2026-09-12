@@ -1,4 +1,14 @@
-import { addHours, eachMinuteOfInterval, format, getDay, isToday, isTomorrow, set } from 'date-fns';
+import {
+  addDays,
+  addHours,
+  eachMinuteOfInterval,
+  format,
+  getDay,
+  isToday,
+  isTomorrow,
+  set,
+  startOfDay,
+} from 'date-fns';
 
 import { DAY_NAMES, HOURS_A_DAY } from '@/constants/app';
 
@@ -80,4 +90,9 @@ export function getTimeOptions() {
   );
 
   return times;
+}
+
+export function getStartOfTomorrow() {
+  const now = new Date();
+  return startOfDay(addDays(now, 1));
 }

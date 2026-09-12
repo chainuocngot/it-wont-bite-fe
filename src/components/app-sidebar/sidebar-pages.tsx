@@ -1,4 +1,3 @@
-import { ClipboardListIcon, StarIcon, SunIcon } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 
 import LinkButton from '@/components/link-button';
@@ -24,6 +23,7 @@ export function SidebarPages() {
       <SidebarGroupContent className="flex flex-col items-stretch">
         {PAGE_ROUTES.map((route) => {
           const Icon = route.Icon;
+          const isActive = route.href === pathname;
 
           return (
             <LinkButton
@@ -32,7 +32,7 @@ export function SidebarPages() {
               variant="ghost"
               onClick={onClickChangePage}
               className={cn('h-11 gap-3 justify-start', {
-                'bg-muted': route.href === pathname,
+                'bg-muted pointer-events-none': isActive,
               })}
             >
               <Icon className="size-5" />

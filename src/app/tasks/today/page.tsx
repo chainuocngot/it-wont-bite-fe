@@ -31,7 +31,7 @@ export default async function Today() {
             <SunIcon />
             <h2 className="text-xl">Hôm nay</h2>
           </div>
-          <QuickTodoForm />
+          <QuickTodoForm todayModeCreate />
         </>
       }
     >

@@ -11,13 +11,14 @@ import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { toast } from '@/components/ui/toast';
 import { TodoStatus } from '@/constants/enum';
-import { safeParseDate } from '@/lib/date';
+import { getStartOfTomorrow, safeParseDate } from '@/lib/date';
 import { cn, handleApiError } from '@/lib/utils';
 import { useCreateTodoMutation } from '@/queries/todo';
 import { CreateTodoBodyType } from '@/schemas/todo';
 
 interface Props {
   favModeCreate?: boolean;
+  todayModeCreate?: boolean;
 }
 
 const CREATE_TODO_BODY_DEFAULT_VALUES: CreateTodoBodyType = {
@@ -29,11 +30,12 @@ function getCreateTodoBodyDefaultValues(additionValues: Partial<CreateTodoBodyTy
   return { ...CREATE_TODO_BODY_DEFAULT_VALUES, ...additionValues };
 }
 
-export default function QuickTodoForm({ favModeCreate }: Props) {
+export default function QuickTodoForm({ favModeCreate, todayModeCreate }: Props) {
   const router = useRouter();
   const [createTodoBody, setCreateTodoBody] = useState<CreateTodoBodyType>(
     getCreateTodoBodyDefaultValues({
       isFav: favModeCreate ?? undefined,
+      removeFromTodayAt: todayModeCreate ? getStartOfTomorrow().toISOString() : undefined,
     }),
   );
   const { mutateAsync } = useCreateTodoMutation();
