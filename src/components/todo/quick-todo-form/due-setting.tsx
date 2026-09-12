@@ -23,7 +23,6 @@ import { formatDate, formatViDay } from '@/lib/date';
 
 interface Props {
   selectedDate: Date | null | undefined;
-  setFieldFn: (value: Date | undefined) => void;
   dropdownTriggerProps?: Omit<MenuPrimitive.Trigger.Props, 'render'>;
   render: ({
     label,
@@ -32,6 +31,7 @@ interface Props {
     label: string | undefined;
     selected: Date | null | undefined;
   }) => ReactElement;
+  onChangeSuccess?: (value: Date | null | undefined) => void;
 }
 
 const today = new Date();
@@ -45,9 +45,9 @@ const dates = {
 
 export default function DueSetting({
   selectedDate,
-  setFieldFn,
   dropdownTriggerProps,
   render,
+  onChangeSuccess,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState(selectedDate);
@@ -64,8 +64,13 @@ export default function DueSetting({
 
   const onValueChange = (value: Date) => {
     setOpen(false);
-    setFieldFn(value);
     setSelected(value);
+    onChangeSuccess?.(value);
+  };
+
+  const handleRemove = () => {
+    setSelected(undefined);
+    onChangeSuccess?.(undefined);
   };
 
   return (
@@ -107,11 +112,11 @@ export default function DueSetting({
               </DropdownMenuSubContent>
             </DropdownMenuPortal>
           </DropdownMenuSub>
-          {open && selectedDate && (
+          {open && selected && (
             <>
               <DropdownMenuSeparator />
               <DropdownMenuGroup>
-                <DropdownMenuItem variant="destructive" onClick={() => setFieldFn(undefined)}>
+                <DropdownMenuItem variant="destructive" onClick={handleRemove}>
                   <TrashIcon />
                   Loại bỏ ngày đến hạn
                 </DropdownMenuItem>

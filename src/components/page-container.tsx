@@ -16,7 +16,7 @@ export default function PageContainer({ titleNode, size = 'lg', children }: Prop
           'max-w-240': size === 'sm',
         })}
       >
-        {titleNode && <div className="sticky pt-10 top-0 z-10 bg-background">{titleNode}</div>}
+        {titleNode && <div className="pt-10 top-0 z-10 bg-background">{titleNode}</div>}
         <ScrollArea>{children}</ScrollArea>
       </div>
     </div>

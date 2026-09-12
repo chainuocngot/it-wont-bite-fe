@@ -1,4 +1,4 @@
-import { SunIcon } from 'lucide-react';
+import { ClipboardListIcon } from 'lucide-react';
 
 import todoApiRequests from '@/api-requests/todo';
 import PageContainer from '@/components/page-container';
@@ -7,7 +7,7 @@ import TodoList from '@/components/todo/todo-list';
 import { groupTodosByStatus } from '@/lib/utils';
 import { GroupedTodos } from '@/types/todo';
 
-export default async function Today() {
+export default async function Inbox() {
   let todos: GroupedTodos = {
     inComplete: [],
     completed: [],
@@ -15,9 +15,7 @@ export default async function Today() {
   };
 
   try {
-    const todosResponse = await todoApiRequests.sListTodo({
-      isToday: true,
-    });
+    const todosResponse = await todoApiRequests.sListTodo();
     todos = groupTodosByStatus(todosResponse);
   } catch (error) {
     console.log('>> Check | error:', error);
@@ -28,8 +26,8 @@ export default async function Today() {
       titleNode={
         <>
           <div className="flex items-center pb-5 gap-3">
-            <SunIcon />
-            <h2 className="text-xl">Hôm nay</h2>
+            <ClipboardListIcon />
+            <h2 className="text-xl">Tác vụ</h2>
           </div>
           <QuickTodoForm />
         </>

@@ -97,20 +97,8 @@ export default function TodoLabelsInput({ todo, onChange }: Props) {
     );
   };
 
-  const handleOpenChange = (open: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
-    if (
-      open &&
-      eventDetails.reason === 'trigger-press' &&
-      (eventDetails.event.target as HTMLElement)?.closest('[data-dropdown-ignore]')
-    ) {
-      eventDetails.cancel();
-    } else {
-      setOpen(open);
-    }
-  };
-
   return (
-    <DropdownMenu open={open} onOpenChange={handleOpenChange} highlightItemOnHover={false}>
+    <DropdownMenu open={open} onOpenChange={setOpen} highlightItemOnHover={false}>
       <DropdownMenuTrigger
         nativeButton={false}
         render={

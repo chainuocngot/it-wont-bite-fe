@@ -6,8 +6,22 @@ import * as React from 'react';
 
 import { cn } from '@/lib/utils';
 
-function DropdownMenu({ ...props }: MenuPrimitive.Root.Props) {
-  return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+function DropdownMenu({ onOpenChange, ...props }: MenuPrimitive.Root.Props) {
+  const handleOpenChange = (open: boolean, eventDetails: MenuPrimitive.Root.ChangeEventDetails) => {
+    if (
+      open &&
+      eventDetails.reason === 'trigger-press' &&
+      (eventDetails.event.target as HTMLElement)?.closest('[data-dropdown-ignore]')
+    ) {
+      eventDetails.cancel();
+    } else {
+      onOpenChange?.(open, eventDetails);
+    }
+  };
+
+  return (
+    <MenuPrimitive.Root data-slot="dropdown-menu" onOpenChange={handleOpenChange} {...props} />
+  );
 }
 
 function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props) {

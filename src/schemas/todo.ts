@@ -13,6 +13,7 @@ export const CreateTodoBodySchema = TodoSchema.pick({
   dueAt: true,
   remindAt: true,
   isFav: true,
+  removeFromTodayAt: true,
 })
   .extend({
     status: TodoSchema.shape.status.default(TodoStatus.Todo),
@@ -20,6 +21,7 @@ export const CreateTodoBodySchema = TodoSchema.pick({
     dueAt: TodoSchema.shape.dueAt.optional(),
     remindAt: TodoSchema.shape.remindAt.optional(),
     isFav: TodoSchema.shape.isFav.default(false).optional(),
+    removeFromTodayAt: TodoSchema.shape.removeFromTodayAt.optional(),
   })
   .strict();
 
@@ -31,6 +33,7 @@ export const ListTodoFilterQuerySchema = TodoSchema.pick({
 })
   .extend({
     status: z.array(z.enum(TodoStatus)),
+    isToday: z.boolean(),
   })
   .partial()
   .strict();
@@ -45,6 +48,7 @@ export const UpdateTodoBodySchema = TodoSchema.pick({
   dueAt: true,
   remindAt: true,
   isFav: true,
+  removeFromTodayAt: true,
 })
   .extend({
     labels: z.array(idZod),

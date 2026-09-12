@@ -6,12 +6,17 @@ import React from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
-type Props = Pick<ButtonPrimitive.Props, 'className'> &
-  VariantProps<typeof buttonVariants> & { children: React.ReactNode; href: string };
+type Props = Pick<ButtonPrimitive.Props, 'className'> & { onClick: () => void } & VariantProps<
+    typeof buttonVariants
+  > & { children: React.ReactNode; href: string };
 
-export default function LinkButton({ children, href, className, ...props }: Props) {
+export default function LinkButton({ children, href, className, variant, size, ...props }: Props) {
   return (
-    <Link href={href} className={cn(buttonVariants(props), className)}>
+    <Link
+      href={href}
+      className={cn(buttonVariants({ variant, size, className }), className)}
+      {...props}
+    >
       {children}
     </Link>
   );

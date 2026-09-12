@@ -13,6 +13,7 @@ export const TodoSchema = z.object({
   dueAt: z.iso.datetime().nullish(),
   remindAt: z.iso.datetime().nullish(),
   isFav: z.boolean(),
+  removeFromTodayAt: z.iso.datetime().nullish(),
   createdAt: z.iso.datetime(),
   updatedAt: z.iso.datetime(),
 });

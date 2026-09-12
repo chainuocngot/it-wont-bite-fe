@@ -12,6 +12,7 @@ export const TodoStatus = {
   Todo: 'Todo',
   InProgress: 'InProgress',
   Completed: 'Completed',
+  Overdue: 'Overdue',
   Cancelled: 'Cancelled',
 } as const;
 

@@ -8,6 +8,7 @@ import {
   StarIcon,
   SunIcon,
   TrashIcon,
+  XIcon,
 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
@@ -29,7 +30,7 @@ import {
   useSidebar,
 } from '@/components/ui/sidebar';
 import { TodoStatus } from '@/constants/enum';
-import { useToggleFavTodo, useToggleStatusTodo } from '@/hooks/use-todo';
+import { useToggleAddTodayTodo, useToggleFavTodo, useToggleStatusTodo } from '@/hooks/use-todo';
 import { formatDateLabel, formatViDate, safeParseDate } from '@/lib/date';
 import { cn, handleApiError, stopPropagation } from '@/lib/utils';
 import { useConfirm } from '@/providers/confirm-dialog-provider';
@@ -47,7 +48,9 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
 
   const { open, toggleSidebar } = useSidebar();
   const todoInView = useTodoStore((store) => store.todoInView);
+
   const setTodoInView = useTodoStore((store) => store.setTodoInView);
+  const patchTodoInView = useTodoStore((store) => store.patchTodoInView);
   const todoDetailSidebarOpen = useUiStore((store) => store.todoDetailSidebarOpen);
 
   const initialTodoInView = useRef<TodoIncludeLabelsType>(null);
@@ -70,6 +73,11 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
     mutateFn: updateTodoMutateAsync,
   });
 
+  const { isPendingToggleAddToday, toggleAddTodayTodo } = useToggleAddTodayTodo({
+    todoInView,
+    mutateFn: updateTodoMutateAsync,
+  });
+
   useEffect(() => {
     if (!open && todoDetailSidebarOpen) {
       toggleSidebar();
@@ -85,10 +93,13 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
       await updateTodoMutateAsync({
         todoId: todoInView.id,
         body: {
-          [field]: value,
+          [field]: value ?? null,
         },
       });
 
+      patchTodoInView({
+        [field]: value ?? null,
+      });
       router.refresh();
     } catch (error) {
       handleApiError(error);
@@ -110,6 +121,11 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
 
     const mutateFn = handleUpdateTodoByField(field);
     await mutateFn(value);
+  };
+
+  const handleClearTodoField = (field: keyof UpdateTodoBodyType) => async () => {
+    const mutateFn = handleUpdateTodoByField(field);
+    await mutateFn(null);
   };
 
   const handleDeleteTodo = async () => {
@@ -152,7 +168,9 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
             <DebouncedInput
               defaultValue={todoInView.title}
               onChangeFinish={handleUpdateTodoInputField('title')}
-              className="ghost-input pl-3 h-6 py-0 text-sm!"
+              className={cn('ghost-input pl-3 h-6 py-0 text-sm!', {
+                'not-focus:line-through': todoInView.status === TodoStatus.Completed,
+              })}
             />
 
             <Button
@@ -173,29 +191,55 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
       </SidebarHeader>
       <SidebarContent className="px-6">
         <div className="space-y-2 py-2">
-          <SurfaceCard className="py-4 text-muted-foreground cursor-pointer">
+          <SurfaceCard
+            className={cn('py-4 cursor-pointer relative group/card', {
+              'text-muted-foreground': !todoInView.removeFromTodayAt,
+              'pointer-events-none': isPendingToggleAddToday,
+              'cursor-default': todoInView.removeFromTodayAt,
+            })}
+            onClick={todoInView.removeFromTodayAt ? undefined : toggleAddTodayTodo}
+          >
             <div className="flex items-center gap-2">
               <SunIcon className="size-4 text-current" />
-              <p className="text-sm text-current">Thêm vào Hôm nay</p>
+              <p className="text-sm text-current">
+                {todoInView.removeFromTodayAt ? 'Đã thêm vào Hôm nay' : 'Thêm vào Hôm nay'}
+              </p>
             </div>
+
+            {!isPendingToggleAddToday && todoInView.removeFromTodayAt && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="absolute top-1/2 -translate-y-1/2 right-3 invisible group-hover/card:visible"
+                onClick={toggleAddTodayTodo}
+                disabled={isPendingToggleAddToday || !todoInView.removeFromTodayAt}
+              >
+                <XIcon />
+              </Button>
+            )}
           </SurfaceCard>
 
           <div className="flex flex-col items-stretch">
             <ReminderSetting
               selectedDate={remindAt}
-              setFieldFn={handleUpdateTodoByField('remindAt')}
+              onChangeSuccess={handleUpdateTodoByField('remindAt')}
               dropdownTriggerProps={{
                 nativeButton: false,
               }}
               render={({ selected }) => {
                 const renderedDate = selected || remindAt;
+
                 return (
                   <SurfaceCard
-                    className={cn('py-4 border-b cursor-pointer', {
+                    className={cn('py-4 border-b cursor-pointer relative group/card', {
                       'py-2': renderedDate,
                     })}
                   >
-                    <div className="flex items-center gap-2">
+                    <div
+                      className={cn('flex items-center gap-2', {
+                        'text-muted-foreground': !renderedDate,
+                      })}
+                    >
                       <BellIcon className="size-4" />
                       {renderedDate ? (
                         <div className="text-sm">
@@ -205,9 +249,21 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
                           </div>
                         </div>
                       ) : (
-                        <p className="text-sm">Nhắc tôi</p>
+                        <p className="text-sm text-current">Nhắc tôi</p>
                       )}
                     </div>
+
+                    {renderedDate && (
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="absolute top-1/2 -translate-y-1/2 right-3 invisible group-hover/card:visible"
+                        onClick={handleClearTodoField('remindAt')}
+                        data-dropdown-ignore
+                      >
+                        <XIcon />
+                      </Button>
+                    )}
                   </SurfaceCard>
                 );
               }}
@@ -215,20 +271,36 @@ export function TodoDetailSidebarContent({ ...props }: React.ComponentProps<type
 
             <DueSetting
               selectedDate={dueAt}
-              setFieldFn={handleUpdateTodoByField('dueAt')}
+              onChangeSuccess={handleUpdateTodoByField('dueAt')}
               dropdownTriggerProps={{
                 nativeButton: false,
               }}
               render={({ selected }) => {
                 const renderedDate = selected || dueAt;
                 return (
-                  <SurfaceCard className="py-4 cursor-pointer">
+                  <SurfaceCard
+                    className={cn('py-4 cursor-pointer relative group/card', {
+                      'text-muted-foreground': !renderedDate,
+                    })}
+                  >
                     <div className="flex items-center gap-2">
                       <CalendarClockIcon className="size-4" />
-                      <p className="text-sm">
+                      <p className="text-sm text-current">
                         {renderedDate ? formatDateLabel(renderedDate) : 'Thêm ngày đến hạn'}
                       </p>
                     </div>
+
+                    {renderedDate && (
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="absolute top-1/2 -translate-y-1/2 right-3 invisible group-hover/card:visible"
+                        onClick={handleClearTodoField('dueAt')}
+                        data-dropdown-ignore
+                      >
+                        <XIcon />
+                      </Button>
+                    )}
                   </SurfaceCard>
                 );
               }}

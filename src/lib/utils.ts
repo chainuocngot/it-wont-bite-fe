@@ -8,6 +8,8 @@ import { toast } from '@/components/ui/toast';
 import { TodoStatus, TypeOfTodoStatus } from '@/constants/enum';
 import { HttpCode } from '@/constants/http';
 import { HttpError, ValidationHttpError } from '@/lib/http-error';
+import { TodoIncludeLabelsType } from '@/schemas/models/todo';
+import { GroupedTodos } from '@/types/todo';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -55,4 +57,23 @@ export function stopPropagation<T extends HTMLElement>(fn?: (...args: unknown[])
     e.stopPropagation();
     fn?.();
   };
+}
+
+export function groupTodosByStatus(todos: TodoIncludeLabelsType[]): GroupedTodos {
+  return todos.reduce(
+    (acc, todo) => {
+      if (todo.status === TodoStatus.Completed) {
+        acc.completed.push(todo);
+      } else if (todo.status === TodoStatus.Todo) {
+        acc.inComplete.push(todo);
+      }
+
+      return acc;
+    },
+    {
+      all: todos,
+      completed: [] as TodoIncludeLabelsType[],
+      inComplete: [] as TodoIncludeLabelsType[],
+    },
+  );
 }

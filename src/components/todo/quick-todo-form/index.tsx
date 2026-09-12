@@ -17,7 +17,7 @@ import { useCreateTodoMutation } from '@/queries/todo';
 import { CreateTodoBodyType } from '@/schemas/todo';
 
 interface Props {
-  favMode?: boolean;
+  favModeCreate?: boolean;
 }
 
 const CREATE_TODO_BODY_DEFAULT_VALUES: CreateTodoBodyType = {
@@ -29,11 +29,11 @@ function getCreateTodoBodyDefaultValues(additionValues: Partial<CreateTodoBodyTy
   return { ...CREATE_TODO_BODY_DEFAULT_VALUES, ...additionValues };
 }
 
-export default function QuickTodoForm({ favMode }: Props) {
+export default function QuickTodoForm({ favModeCreate }: Props) {
   const router = useRouter();
   const [createTodoBody, setCreateTodoBody] = useState<CreateTodoBodyType>(
     getCreateTodoBodyDefaultValues({
-      isFav: favMode ?? undefined,
+      isFav: favModeCreate ?? undefined,
     }),
   );
   const { mutateAsync } = useCreateTodoMutation();
@@ -51,7 +51,7 @@ export default function QuickTodoForm({ favMode }: Props) {
   const clearCreateTodoBody = () => {
     setCreateTodoBody(
       getCreateTodoBodyDefaultValues({
-        isFav: favMode ?? undefined,
+        isFav: favModeCreate ?? undefined,
       }),
     );
   };
@@ -92,7 +92,7 @@ export default function QuickTodoForm({ favMode }: Props) {
           <div className="flex items-stretch gap-4 w-full">
             <DueSetting
               selectedDate={safeParseDate(createTodoBody.dueAt)}
-              setFieldFn={handleSetCreateTodoBodyByField('dueAt')}
+              onChangeSuccess={handleSetCreateTodoBodyByField('dueAt')}
               render={({ label }) => (
                 <Button variant="outline" size={label ? 'sm' : 'icon-sm'}>
                   <CalendarDaysIcon className={cn({ 'mr-1': label })} />
@@ -102,7 +102,7 @@ export default function QuickTodoForm({ favMode }: Props) {
             />
             <ReminderSetting
               selectedDate={safeParseDate(createTodoBody.remindAt)}
-              setFieldFn={handleSetCreateTodoBodyByField('remindAt')}
+              onChangeSuccess={handleSetCreateTodoBodyByField('remindAt')}
               render={({ label }) => (
                 <Button variant="outline" size={label ? 'sm' : 'icon-sm'}>
                   <BellIcon className={cn({ 'mr-1': label })} />

@@ -47,7 +47,13 @@ export default function TodoItem({
             onClick={stopPropagation()}
           />
           <div className="flex flex-col">
-            <p className="text-sm">{data.title}</p>
+            <p
+              className={cn('text-sm mb-0!', {
+                'line-through': data.status === TodoStatus.Completed,
+              })}
+            >
+              {data.title}
+            </p>
             <MetaList>
               <span>Tác vụ</span>
               {data.dueAt && (
